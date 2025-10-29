@@ -1,4 +1,4 @@
-package com.example.vocabdaily
+package com.example.vocabdaily.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
