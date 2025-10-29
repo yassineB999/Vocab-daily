@@ -10,4 +10,7 @@ import com.example.vocabdaily.domain.model.Word
 )
 abstract class WordDatabase : RoomDatabase() {
     abstract val wordDao: WordDao
+    companion object{
+        const val DATABASE_NAME = "words_db"
+    }
 }
