@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.vocabdaily.data.data_source.WordDatabase
 import com.example.vocabdaily.data.repository.WordRepositoryImpl
 import com.example.vocabdaily.domain.repository.WordRepository
+import com.example.vocabdaily.domain.use_case.AddWordUseCase
 import com.example.vocabdaily.domain.use_case.DeleteWordUseCase
 import com.example.vocabdaily.domain.use_case.GetWordsUseCase
 import com.example.vocabdaily.domain.use_case.WordUseCases
@@ -38,8 +39,9 @@ object AppModule {
     fun provideWordUseCases(repository: WordRepository): WordUseCases {
         return WordUseCases(
             getWords = GetWordsUseCase(repository),
-            deleteWord = DeleteWordUseCase(repository)
+            deleteWord = DeleteWordUseCase(repository),
+            addWord = AddWordUseCase(repository),
+            //editWord = EditWordUseCase(repository),
         )
     }
-
 }

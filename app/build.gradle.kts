@@ -4,17 +4,23 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
     alias(libs.plugins.androidx.room)
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+
 android {
     namespace = "com.example.vocabdaily"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.vocabdaily"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -43,11 +49,6 @@ android {
     }
 }
 
-room {
-    // Le répertoire où Room stockera les schémas JSON
-    schemaDirectory("$projectDir/schemas")
-}
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -58,6 +59,21 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.sqlite.bundled)
+    ksp(libs.androidx.room.compiler)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -65,11 +81,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.sqlite.bundled)
-    ksp(libs.androidx.room.compiler)
-
-    implementation("com.google.dagger:hilt-android:2.57.1")
-    ksp("com.google.dagger:hilt-android-compiler:2.57.1")
 }

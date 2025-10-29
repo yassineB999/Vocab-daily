@@ -5,4 +5,13 @@ sealed class WordOrder(val orderType: OrderType) {
     class Description(orderType: OrderType): WordOrder(orderType)
     class Color(orderType: OrderType): WordOrder(orderType)
     class Date(orderType: OrderType): WordOrder(orderType)
+
+    fun copy(orderType: OrderType): WordOrder{
+        return when(this){
+            is Word -> Word(orderType)
+            is Description -> Description(orderType)
+            is Color -> Color(orderType)
+            is Date -> Date(orderType)
+        }
+    }
 }
