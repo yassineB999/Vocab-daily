@@ -46,4 +46,42 @@ fun GreetingPreview() {
     }
 }
 
+/*
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            VocabDailyTheme {
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "words"
+                ) {
+                    composable("words") {
+                        WordsScreen(navController = navController)
+                    }
+                    composable("add_edit_word") {
+                        AddEditWordScreen(navController = navController)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AddEditWordScreen(navController: androidx.navigation.NavController) {
+    // Simple placeholder UI; replace with your actual add/edit form.
+    androidx.compose.material3.Text(
+        text = "Add/Edit Word",
+        style = MaterialTheme.typography.titleLarge
+    )
+}*/
+
+
+
+
 

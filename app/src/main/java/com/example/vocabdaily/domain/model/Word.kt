@@ -10,7 +10,7 @@ import com.example.vocabdaily.ui.theme.RedPink
 
 @Entity
 data class Word(
-    @PrimaryKey val id : Int? = null,
+    @PrimaryKey(autoGenerate = true) val id : Int? = null,
     val word :String,
     val description : String,
     val timestamp : Long,

@@ -7,6 +7,7 @@ import com.example.vocabdaily.data.repository.WordRepositoryImpl
 import com.example.vocabdaily.domain.repository.WordRepository
 import com.example.vocabdaily.domain.use_case.AddWordUseCase
 import com.example.vocabdaily.domain.use_case.DeleteWordUseCase
+import com.example.vocabdaily.domain.use_case.GetWordUseCase
 import com.example.vocabdaily.domain.use_case.GetWordsUseCase
 import com.example.vocabdaily.domain.use_case.WordUseCases
 import dagger.Module
@@ -41,6 +42,7 @@ object AppModule {
             getWords = GetWordsUseCase(repository),
             deleteWord = DeleteWordUseCase(repository),
             addWord = AddWordUseCase(repository),
+            getWord = GetWordUseCase(repository),
             //editWord = EditWordUseCase(repository),
         )
     }

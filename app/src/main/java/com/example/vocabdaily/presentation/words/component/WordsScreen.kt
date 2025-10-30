@@ -1,5 +1,6 @@
 package com.example.vocabdaily.presentation.words.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.vocabdaily.presentation.words.WordViewModel
 import com.example.vocabdaily.presentation.words.WordsEvent
+import kotlinx.coroutines.launch
 
 @Composable
 fun WordsScreen(
@@ -67,8 +70,19 @@ fun WordsScreen(
                 items(state.words) { word ->
                     WordItem(
                         word = word,
-                        modifier = Modifier,
-                        onDeleteClick = { viewModel.onEvent(WordsEvent.DeleteWord(word)) }
+                        modifier = Modifier.clickable { },
+                        onDeleteClick = {
+                            viewModel.onEvent(WordsEvent.DeleteWord(word))
+                            scope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = "Word deleted",
+                                    actionLabel = "Undo"
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    viewModel.onEvent(WordsEvent.RestoreWord)
+                                }
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
