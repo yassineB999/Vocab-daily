@@ -8,7 +8,7 @@ import com.example.vocabdaily.ui.theme.Violet
 import com.example.vocabdaily.ui.theme.BabyBlue
 import com.example.vocabdaily.ui.theme.RedPink
 
-@Entity
+@Entity(tableName = "word")
 data class Word(
     @PrimaryKey(autoGenerate = true) val id : Int? = null,
     val word :String,

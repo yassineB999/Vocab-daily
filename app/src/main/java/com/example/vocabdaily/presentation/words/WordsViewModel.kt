@@ -65,7 +65,7 @@ class WordViewModel @Inject constructor(
     }
     private fun getWords(wordOrder: WordOrder){
         getWordsJob?.cancel()
-        getWordsJob = wordUseCases.getWords().onEach { words -> _state.value = state.value.copy(
+        getWordsJob = wordUseCases.getWords(wordOrder).onEach { words -> _state.value = state.value.copy(
             words = words,
             wordOrder = wordOrder
         ) }

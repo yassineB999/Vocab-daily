@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.vocabdaily.presentation.routes.Screen
 import com.example.vocabdaily.presentation.words.WordViewModel
 import com.example.vocabdaily.presentation.words.WordsEvent
 import kotlinx.coroutines.launch
@@ -42,8 +43,8 @@ fun WordsScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // Navigate to your add/edit screen route. Replace with your route constant.
-                    navController.navigate("add_edit_word")
+                    // Navigate to Add/Edit for new word using route pattern defaults.
+                    navController.navigate(Screen.AddEditWordScreen.route + "?wordId=-1&wordColor=-1")
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -65,26 +66,38 @@ fun WordsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // List of words
-            LazyColumn {
-                items(state.words) { word ->
-                    WordItem(
-                        word = word,
-                        modifier = Modifier.clickable { },
-                        onDeleteClick = {
-                            viewModel.onEvent(WordsEvent.DeleteWord(word))
-                            scope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = "Word deleted",
-                                    actionLabel = "Undo"
+            // List of words or an empty state hint
+            if (state.words.isEmpty()) {
+                Text(
+                    text = "No words yet. Tap + to add your first word.",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            } else {
+                LazyColumn {
+                    items(state.words) { word ->
+                        WordItem(
+                            word = word,
+                            modifier = Modifier.clickable {
+                                val id = word.id ?: -1
+                                navController.navigate(
+                                    Screen.AddEditWordScreen.route + "?wordId=" + id + "&wordColor=" + word.color
                                 )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    viewModel.onEvent(WordsEvent.RestoreWord)
+                            },
+                            onDeleteClick = {
+                                viewModel.onEvent(WordsEvent.DeleteWord(word))
+                                scope.launch {
+                                    val result = snackbarHostState.showSnackbar(
+                                        message = "Word deleted",
+                                        actionLabel = "Undo"
+                                    )
+                                    if (result == SnackbarResult.ActionPerformed) {
+                                        viewModel.onEvent(WordsEvent.RestoreWord)
+                                    }
                                 }
                             }
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
             }
         }

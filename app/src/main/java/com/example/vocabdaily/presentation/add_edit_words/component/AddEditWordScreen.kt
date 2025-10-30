@@ -2,7 +2,6 @@ package com.example.vocabdaily.presentation.add_edit_words.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -66,7 +66,9 @@ fun AddEditWordScreen(
     val selectedColor by addEditWordViewModel.wordColor
 
     LaunchedEffect(wordColor) {
-        if (wordColor != 0) {
+        // Only apply a color from navigation arguments when it's a real value.
+        // New words pass -1, so keep the random default in the ViewModel.
+        if (wordColor != -1) {
             addEditWordViewModel.onEvent(AddEditWordEvent.ChangeColor(wordColor))
         }
     }
@@ -242,7 +244,7 @@ private fun ColorPaletteHeader(
     onToggle: () -> Unit,
     selectedColor: Int
 ) {
-    val rotation by animateFloatAsState(if (showPalette) 180f else 0f, label = "paletteRotation")
+    //val rotation by animateFloatAsState(if (showPalette) 180f else 0f, label = "paletteRotation")
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -281,7 +283,8 @@ private fun ColorPalette(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         colors.forEach { c ->
-            val isSelected = c.value.toInt() == selectedColor
+            val argb = c.toArgb()
+            val isSelected = argb == selectedColor
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -292,7 +295,7 @@ private fun ColorPalette(
                         color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                         shape = CircleShape
                     )
-                    .clickable { onColorSelected(c.value.toInt()) },
+                    .clickable { onColorSelected(argb) },
                 contentAlignment = Alignment.Center
             ) {}
         }

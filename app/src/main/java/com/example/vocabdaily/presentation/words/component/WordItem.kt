@@ -1,6 +1,6 @@
 package com.example.vocabdaily.presentation.words.component
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,21 +12,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vocabdaily.domain.model.Word
+import kotlin.math.pow
 
 /**
  * Displays a single Word item with a custom cut-corner background and content.
@@ -49,72 +51,52 @@ fun WordItem(
 ) {
     // We wrap everything in a Box to layer the custom background (Canvas)
     // beneath the foreground content (texts and actions).
-    Box(
+    val baseColor = Color(word.color)
+    val containerColor = baseColor.copy(alpha = 0.12f)
+    val borderColor = baseColor.copy(alpha = 0.6f)
+    Card(
         modifier = modifier
-            .fillMaxWidth() // Let parent control width; default expands to max available
-            .padding(12.dp) // Outer spacing around the card
+            .fillMaxWidth()
+            .padding(12.dp),
+        shape = RoundedCornerShape(cornerRadius),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = BorderStroke(1.dp, borderColor)
     ) {
-        // Draw a rounded rect with a cut corner on the top-right using Canvas.
-        Canvas(modifier = Modifier.matchParentSize()) {
-            val cornerPx = cornerRadius.toPx()
-            val cutPx = cutCornerSize.toPx()
-
-            // Convert stored Int color to Compose Color.
-            val baseColor = Color(word.color)
-            val accentColor = baseColor.copy(alpha = 0.35f)
-
-            // Path describing a rectangle with a cut corner on the top-right.
-            val cutCornerPath = Path().apply {
-                moveTo(0f, 0f)
-                lineTo(size.width - cutPx, 0f)
-                lineTo(size.width, cutPx)
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height)
-                close()
-            }
-
-            // Clip subsequent drawing to the shape defined by [cutCornerPath].
-            clipPath(cutCornerPath) {
-                // Draw the rounded base background.
-                drawRoundRect(
-                    color = baseColor,
-                    cornerRadius = CornerRadius(cornerPx, cornerPx),
-                    size = size
-                )
-            }
-
-            // Optional accent triangle to visually emphasize the cut corner.
-            val accentPath = Path().apply {
-                moveTo(size.width - cutPx, 0f)
-                lineTo(size.width, cutPx)
-                lineTo(size.width, 0f)
-                close()
-            }
-            drawPath(color = accentColor, path = accentPath)
-        }
 
         // Foreground content: word title, description, and an action row.
         Column(
             modifier = Modifier
-                .matchParentSize()
+                .fillMaxWidth()
                 .padding(16.dp), // Inner padding inside the card
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // Derive content color that contrasts with the background for readability.
+            // Use WCAG relative luminance to decide black/white for better contrast across hues.
+            fun toLinear(c: Float): Float {
+                val cd = c.toDouble()
+                val result = if (cd <= 0.03928) cd / 12.92 else ((cd + 0.055) / 1.055).pow(2.4)
+                return result.toFloat()
+            }
+            val luminance = 0.2126f * toLinear(baseColor.red) + 0.7152f * toLinear(baseColor.green) + 0.0722f * toLinear(baseColor.blue)
+            val contentColor = if (luminance > 0.179f) Color.Black else Color.White
+
             // Title line: visible, larger text.
             Text(
                 text = word.word,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.titleLarge,
+                color = contentColor,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.SemiBold
             )
 
             // Description/body: smaller text that can wrap.
             Text(
                 text = word.description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
-                maxLines = 3,
+                style = MaterialTheme.typography.bodyLarge,
+                color = contentColor.copy(alpha = 0.9f),
+                maxLines = 4,
                 overflow = TextOverflow.Ellipsis
             )
 
@@ -130,7 +112,7 @@ fun WordItem(
                 Box(
                     modifier = Modifier
                         .size(18.dp)
-                        .background(Color(word.color), RoundedCornerShape(4.dp))
+                        .background(baseColor, RoundedCornerShape(4.dp))
                 )
 
                 // Text button ensures we don't need icon dependencies.

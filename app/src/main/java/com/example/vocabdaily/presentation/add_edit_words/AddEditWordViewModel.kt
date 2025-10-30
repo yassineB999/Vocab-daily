@@ -94,6 +94,7 @@ class AddEditWordViewModel @Inject constructor(
                         // Create a new word and call the use case
                         wordUseCases.addWord(
                             Word(
+                                id = currentWordId,
                                 word = wordText.value.text,
                                 description = descriptionText.value.text,
                                 timestamp = System.currentTimeMillis(),

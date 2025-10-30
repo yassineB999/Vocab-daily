@@ -6,7 +6,7 @@ import com.example.vocabdaily.domain.model.Word
 
 @Database(
     entities = [Word::class],
-    version = 1
+    version = 2
 )
 abstract class WordDatabase : RoomDatabase() {
     abstract val wordDao: WordDao

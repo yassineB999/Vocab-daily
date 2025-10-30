@@ -43,7 +43,6 @@ object AppModule {
             deleteWord = DeleteWordUseCase(repository),
             addWord = AddWordUseCase(repository),
             getWord = GetWordUseCase(repository),
-            //editWord = EditWordUseCase(repository),
         )
     }
 }

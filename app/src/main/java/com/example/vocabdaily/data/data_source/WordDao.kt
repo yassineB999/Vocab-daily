@@ -16,7 +16,7 @@ interface WordDao {
     fun getWords(): Flow<List<Word>>
 
     @Query("Select * from word where id = :id")
-    suspend fun getWordById(id: Int): Word
+    suspend fun getWordById(id: Int): Word?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWord(word: Word)

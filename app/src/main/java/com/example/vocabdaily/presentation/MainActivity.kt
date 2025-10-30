@@ -4,83 +4,63 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.vocabdaily.presentation.add_edit_words.component.AddEditWordScreen
+import com.example.vocabdaily.presentation.routes.Screen
+import com.example.vocabdaily.presentation.words.component.WordsScreen
 import com.example.vocabdaily.ui.theme.VocabDailyTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            VocabDailyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    VocabDailyTheme {
-        Greeting("Android")
-    }
-}
-
-/*
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             VocabDailyTheme {
-                val navController = rememberNavController()
-
-                NavHost(
-                    navController = navController,
-                    startDestination = "words"
-                ) {
-                    composable("words") {
-                        WordsScreen(navController = navController)
-                    }
-                    composable("add_edit_word") {
-                        AddEditWordScreen(navController = navController)
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.WordsScreen.route
+                    ){
+                        composable(route = Screen.WordsScreen.route){
+                            WordsScreen(navController = navController)
+                        }
+                        composable(
+                            route = Screen.AddEditWordScreen.route + "?wordId={wordId}&wordColor={wordColor}",
+                            arguments = listOf(
+                                navArgument("wordId") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                },
+                                navArgument("wordColor") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val wordColor = backStackEntry.arguments?.getInt("wordColor") ?: -1
+                            AddEditWordScreen(
+                                navController = navController,
+                                wordColor = wordColor
+                            )
+                        }
                     }
                 }
+
             }
         }
     }
 }
-
-@Composable
-fun AddEditWordScreen(navController: androidx.navigation.NavController) {
-    // Simple placeholder UI; replace with your actual add/edit form.
-    androidx.compose.material3.Text(
-        text = "Add/Edit Word",
-        style = MaterialTheme.typography.titleLarge
-    )
-}*/
-
 
 
 
