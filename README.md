@@ -342,19 +342,9 @@ Made with ❤️ using Jetpack Compose
 
 | Words List | Add/Edit Word | Color Selection |
 |:----------:|:-------------:|:---------------:|
-| ![Words Screen](docs/screenshots/words_screen.png) | ![Add Word](docs/screenshots/add_word_screen.png) | ![Color Selection](docs/screenshots/color_selection.png) |
+| ![Words Screen](docs/screenshots/words_screen.png) | ![Add Word](docs/screenshots/add_word_screen.png) |
 | Browse and manage your vocabulary | Add new words with descriptions | Choose from 5 color themes |
-
-### Sorting & Organization
-
-| Sort by Word | Sort by Date | Sort by Color |
-|:------------:|:------------:|:-------------:|
-| ![Sort Word](docs/screenshots/sort_word.png) | ![Sort Date](docs/screenshots/sort_date.png) | ![Sort Color](docs/screenshots/sort_color.png) |
-| Alphabetical ordering | Chronological ordering | Color-based grouping |
-
 </div>
-
-> **Note**: To add screenshots, create a `docs/screenshots/` directory in your project root and place your app screenshots there. Update the image paths accordingly.
 
 ## Notes
 - This project uses Material 3 and a simple clean architecture to remain easy to extend.
